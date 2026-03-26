@@ -1,5 +1,4 @@
 # Ex-3-RECOGNITION-OF-A-VALID-ARITHMETIC-EXPRESSION-THAT-USES-OPERATOR-AND-USING-YACC
-# Date:21-10-2024
 # AIM
 To write a yacc program to recognize a valid arithmetic expression that uses operator +,- ,* and /.
 # ALGORITHM
@@ -11,7 +10,8 @@ To write a yacc program to recognize a valid arithmetic expression that uses ope
 6.	Compile the yacc program with yacc compiler to produce output file as y.tab.c. eg $ yacc –d arith_id.y
 7.	Compile these with the C compiler as gcc lex.yy.c y.tab.c
 8.	Enter an arithmetic expression as input and the tokens are identified as output.
-# PROGRAM:
+# PROGRAM
+l.file:
 ```
 %{
 #include "y.tab.h"
@@ -19,62 +19,71 @@ To write a yacc program to recognize a valid arithmetic expression that uses ope
 
 %%
 
-"=" { printf("\n Operator is EQUAL"); return '='; }
-"+" { printf("\n Operator is PLUS"); return PLUS; }
-"-" { printf("\n Operator is MINUS"); return MINUS; }
-"/" { printf("\n Operator is DIVISION"); return DIVISION; }
-"*" { printf("\n Operator is MULTIPLICATION"); return MULTIPLICATION; }
-[a-zA-Z][a-zA-Z0-9]* { printf("\n Identifier is %s", yytext); return ID; }
-. { return yytext[0]; }
-\n { /* Ignore newlines */ }
+"=" {printf("\n Operator is EQUAL");} 
+"+" {printf("\n Operator is PLUS");}
+"-" {printf("\n Operator is MINUS");} 
+"/" {printf("\n Operator is DIVISION");}
+"*" {printf("\n Operator is MULTIPLICATION");} 
+[a-zA-Z]*[0-9]* {
+printf("\n Identifier is %s",yytext); return ID; }
+. return yytext[0];
+\n return 0;
 
 %%
 
-int yywrap() {
-    return 1;  // End of input signal
+int yywrap()
+{
+return 1;
 }
 
+```
+y.file:
+```
 %{
-#include <stdio.h>
-int yylex(void);
-void yyerror(const char *s);
+#include<stdio.h>
 %}
 
-%token ID PLUS MINUS MULTIPLICATION DIVISION
-
-%%
-statement: ID '=' E {
-    printf("\nValid arithmetic expression\n");
-    $$ = $3;
-}
-;
-
-E: E PLUS ID
- | E MINUS ID
- | E MULTIPLICATION ID
- | E DIVISION ID
- | ID
-;
+%token A ID
 
 %%
 
-extern FILE* yyin;
+statement: A'='E
 
-int main() {
-    yyin = stdin;
-    do {
-        yyparse();
-    } while (!feof(yyin));
-    return 0;
+| E {
+
+printf("\n Valid arithmetic expression");
+
+$$=$1;
+
 }
 
-void yyerror(const char *s) {
-    fprintf(stderr, "Error: %s\n", s);
+;
+
+E: E'+'ID
+
+| E'-'ID
+
+| E'*'ID
+
+| E'/'ID
+
+| ID
+
+;
+
+%%
+
+extern FILE*yyin; main() {
+do { yyparse();
+}while(!feof(yyin)); } yyerror(char*s)
+{
+
 }
+
 ```
-# OUTPUT:
+# OUTPUT
+<img width="600" height="477" alt="image" src="https://github.com/user-attachments/assets/6e988bb7-9988-4b6d-bff9-80a661500416" />
 
-![image](https://github.com/user-attachments/assets/833f2563-3fd2-4773-994e-b1394f058fda)
 
 # RESULT
 A YACC program to recognize a valid arithmetic expression that uses operator +,-,* and / is executed successfully and the output is verified.
